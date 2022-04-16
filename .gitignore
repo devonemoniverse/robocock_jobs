@@ -36,3 +36,4 @@ ormconfig.json
 .env
 package-lock.json
 generate-entity.bat
+output
