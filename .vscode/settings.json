@@ -1,0 +1,12 @@
+{
+    "eslint.validate": [
+    "typescript",
+    "typescriptreact"
+    ],
+    "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+    },
+    "typescriptHero.imports.stringQuoteStyle": "\"",
+    "typescriptHero.imports.organizeOnSave": true,
+    "typescript.preferences.importModuleSpecifier": "relative"
+}
