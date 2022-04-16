@@ -103,7 +103,11 @@ export class RobocockNftJobService extends AbstractService {
                             r.owner = item.to;
                             r.generation = cockInfo.generation;
                             await txnEm.save(r);
-                        } 
+                        }
+                        if(r.owner.toLowerCase() !== item.to.toLowerCase()){
+                            r.owner = item.to;
+                            await txnEm.save(r);
+                        }
                     }
                     
                 });
