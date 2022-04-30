@@ -1,10 +1,11 @@
 import BigNumber from "bignumber.js";
 
+import * as Robocock from "../nft-job/Robocock.json";
 import { EventLogs } from "./event-logs";
 
 export class EventLogsTransfer extends EventLogs {
     constructor(data,  topics, name){
-        super(data, topics, name);
+        super(data, topics, name, Robocock);
     }
    
     getParseLog(web3: any) {

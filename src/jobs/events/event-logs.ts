@@ -1,4 +1,3 @@
-import * as Robocock from "../nft-job/Robocock.json";
 import { ILog } from "./ILog";
 
 export class EventLogs implements ILog {
@@ -6,13 +5,13 @@ export class EventLogs implements ILog {
     typesArray: any;
     topics: any;
     name: any;
-    constructor(data,  topics, name){
+    constructor(data,  topics, name, json){
         this.data = data;
         this.typesArray = [];
         this.topics = topics;
         this.name = name;
         
-        for(const data of Robocock){
+        for(const data of json){
             if(data.type === "event" && data.name === name){
                 this.typesArray = data.inputs;
                 break;
