@@ -21,4 +21,7 @@ export class Robocock extends Core {
 
   @Column("varchar", { name: "OWNER", length: 64 })
   owner: string;
+
+  @Column("bigint", { name: "BREED_COUNT", default: () => "'0'" })
+  breedCount: string;
 }

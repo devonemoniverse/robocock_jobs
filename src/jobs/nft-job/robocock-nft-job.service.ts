@@ -69,6 +69,11 @@ export class RobocockNftJobService extends CovalentEventRetrieverService {
                     r.robocockId = cockInfo.tokenId;
                     r.owner = item.to;
                     r.generation = cockInfo.generation;
+                    if(parseInt(cockInfo.genes) === 0){
+                        r.breedCount = "27"; // OG 27
+                    } else {
+                        r.breedCount = "9"; // normal 9
+                    }
                     await txnEm.save(r);
                 }
                 if(r.owner.toLowerCase() !== item.to.toLowerCase()){
