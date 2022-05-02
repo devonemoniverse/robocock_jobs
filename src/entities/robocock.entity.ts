@@ -24,4 +24,14 @@ export class Robocock extends Core {
 
   @Column("bigint", { name: "BREED_COUNT", default: () => "'0'" })
   breedCount: string;
+
+  isRoboHEN():boolean{
+    return parseInt(this.type) === 1;
+  }
+  isRoboCOCK():boolean{
+    return parseInt(this.type) === 0;
+  }
+  isOG():boolean{
+    return parseInt(this.generation) === 0;
+  }
 }
