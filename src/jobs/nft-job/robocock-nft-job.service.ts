@@ -13,6 +13,7 @@ const TOPIC_EVENT_NAME_MAPPING = {
     ["0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef".toLowerCase()]:(data, topics)=>new EventLogsTransfer(data, topics,"Transfer") 
 }
 
+const TIER_ULTRA = "4";
 @Injectable()
 export class RobocockNftJobService extends CovalentEventRetrieverService {
     
@@ -69,6 +70,9 @@ export class RobocockNftJobService extends CovalentEventRetrieverService {
                     r.robocockId = cockInfo.tokenId;
                     r.owner = item.to;
                     r.generation = cockInfo.generation;
+                    if(r.isOG()){
+                        r.tier = TIER_ULTRA;
+                    }
                     
                     // OG Robohen 27 breeding count
                     // OG Robocock 9 Breeding Count
