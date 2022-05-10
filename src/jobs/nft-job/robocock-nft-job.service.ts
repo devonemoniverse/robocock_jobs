@@ -79,8 +79,24 @@ export class RobocockNftJobService extends CovalentEventRetrieverService {
                     if(r.isOG()){
                         
                         // for the case of OG just concatenate
+                        // allele info
+                        let genes = 
+                        "0"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes+ // head
+                        "1"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes+ // body
+                        "2"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes+ // wings
+                        "3"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes+ // tail
+                        "4"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes; // feet
+
+                        // tier info
+                        genes = genes +
+                        "0"+"0"+"4"+ // head ultra
+                        "1"+"0"+"4"+ // body ultra
+                        "2"+"0"+"4"+ // wings ultra
+                        "3"+"0"+"4"+ // tail ultra
+                        "4"+"0"+"4"; // feet ultra
+
                         r.attributes = {
-                            genes: "000"+cockInfo.genes+"000"+cockInfo.genes+"000"+cockInfo.genes,
+                            genes,
                             summonDate: cockInfo.summonDate
                         };
                         
