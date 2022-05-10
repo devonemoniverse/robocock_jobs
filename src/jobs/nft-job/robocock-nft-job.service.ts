@@ -77,6 +77,13 @@ export class RobocockNftJobService extends CovalentEventRetrieverService {
                     // OG Robohen 27 breeding count
                     // OG Robocock 9 Breeding Count
                     if(r.isOG()){
+                        
+                        // for the case of OG just concatenate
+                        r.attributes = {
+                            genes: "000"+cockInfo.genes+"000"+cockInfo.genes+"000"+cockInfo.genes,
+                            summonDate: cockInfo.summonDate
+                        };
+                        
                         if(r.isRoboHEN()){
                             r.breedCount = "27";
                         }else {
