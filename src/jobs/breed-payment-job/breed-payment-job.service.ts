@@ -1,12 +1,16 @@
-import { Injectable } from "@nestjs/common";
-import { EntityManager } from "typeorm";
+import { EntityManager } from 'typeorm';
 
-import { SYSPAR } from "../../common/enum";
-import { QUERIES } from "../../database/queries";
-import { PaymentRequest } from "../../entities/payment-request.entity";
-import { CovalentEventRetrieverService } from "../covalent-event-retriever.service";
-import { EventLogs } from "../events/event-logs";
-import * as RobocockBreed from "./RobocockBreed.json";
+import { Injectable } from '@nestjs/common';
+
+import { SYSPAR } from '../../common/enum';
+import { QUERIES } from '../../database/queries';
+import { BreedRequest } from '../../entities/breed-request.entity';
+import { PaymentRequest } from '../../entities/payment-request.entity';
+import {
+  CovalentEventRetrieverService,
+} from '../covalent-event-retriever.service';
+import { EventLogs } from '../events/event-logs';
+import * as RobocockBreed from './RobocockBreed.json';
 
 /*
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -14,7 +18,8 @@ const axios = require('axios');
 https://docs.nestjs.com/providers#services
 */
 const TOPIC_EVENT_NAME_MAPPING = {
-    ["0x7cf6180e26cfdff6fdb643269e29592637d0245b23bb692f5040376196525003".toLowerCase()]:(data, topics)=>new EventLogs(data, topics,"PayBreedingFee",RobocockBreed) 
+    ["0x7cf6180e26cfdff6fdb643269e29592637d0245b23bb692f5040376196525003".toLowerCase()]:(data, topics)=>new EventLogs(data, topics,"PayBreedingFee",RobocockBreed),
+    ["0x6e53cc42abadcd760448bd797fb612b195af79d0be48b910f5701e5ae152dc17".toLowerCase()]:(data, topics)=>new EventLogs(data, topics,"RobocockBreed",RobocockBreed),
 }
 @Injectable()
 export class BreedPaymentJobService extends CovalentEventRetrieverService  {
@@ -50,6 +55,14 @@ export class BreedPaymentJobService extends CovalentEventRetrieverService  {
                     pay.status = "L";
                     pay.txnHash = actualData.tx_hash;
                     await txnEm.save(pay);
+                }
+            }
+            if(eventName.getLogName() === "RobocockBreed") {
+                const breed = await txnEm.findOne(BreedRequest,{breedRequestId: item.nonce });
+                if(breed){
+                    breed.status = "L";
+                    breed.txnHash = actualData.tx_hash;
+                    await txnEm.save(breed);
                 }
             }
         });
