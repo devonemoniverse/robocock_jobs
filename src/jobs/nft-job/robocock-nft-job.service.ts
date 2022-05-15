@@ -1,11 +1,14 @@
-import { Injectable } from "@nestjs/common";
-import { EntityManager } from "typeorm";
+import { EntityManager } from 'typeorm';
 
-import { SYSPAR } from "../../common/enum";
-import { QUERIES } from "../../database/queries";
-import { Robocock } from "../../entities/robocock.entity";
-import { CovalentEventRetrieverService } from "../covalent-event-retriever.service";
-import { EventLogsTransfer } from "../events/event-logs-transfer";
+import { Injectable } from '@nestjs/common';
+
+import { SYSPAR } from '../../common/enum';
+import { QUERIES } from '../../database/queries';
+import { Robocock } from '../../entities/robocock.entity';
+import {
+  CovalentEventRetrieverService,
+} from '../covalent-event-retriever.service';
+import { EventLogsTransfer } from '../events/event-logs-transfer';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const axios = require('axios');
@@ -61,23 +64,19 @@ export class RobocockNftJobService extends CovalentEventRetrieverService {
                 if(!r){
                     const cockInfo = await this.blockChainService.getRobocockInfo(item.tokenId);
                     r = new Robocock();
-                    r.attributes = {
-                        genes: cockInfo.genes,
-                        summonDate: cockInfo.summonDate
-                    };
                     r.class = cockInfo.className;
                     r.type = cockInfo.rtype;
                     r.robocockId = cockInfo.tokenId;
                     r.owner = item.to;
                     r.generation = cockInfo.generation;
-                    if(r.isOG()){
-                        r.tier = TIER_ULTRA;
-                    }
+                    r.classId = cockInfo.class;
+                    // if(r.isOG()){
+                    //     r.tier = TIER_ULTRA;
+                    // }
                     
                     // OG Robohen 27 breeding count
                     // OG Robocock 9 Breeding Count
                     if(r.isOG()){
-                        
                         // for the case of OG just concatenate
                         // allele info
                         let genes = 
@@ -106,6 +105,10 @@ export class RobocockNftJobService extends CovalentEventRetrieverService {
                             r.breedCount = "9";
                         }
                     } else {
+                        r.attributes = {
+                            genes: this.addPrefix("0",50,cockInfo.genes),
+                            summonDate: cockInfo.summonDate
+                        };
                         // Regular Robohen 9 Breeding count
                         // Regular Robocock 3 Breeding Count
                         if(r.isRoboHEN()){
@@ -122,6 +125,13 @@ export class RobocockNftJobService extends CovalentEventRetrieverService {
                 }
             }
         });
+    }
+    addPrefix(pad: string, size: number, genes: any) {
+        let padded = "";
+        while(genes.length + padded.length < size){
+            padded+=pad;
+        } 
+        return padded+genes;
     }
     
 }

@@ -1,6 +1,9 @@
-import { Column, Entity } from "typeorm";
+import {
+  Column,
+  Entity,
+} from 'typeorm';
 
-import { Core } from "../core/database/core.entity";
+import { Core } from '../core/database/core.entity';
 
 @Entity("robocock")
 export class Robocock extends Core {
@@ -27,7 +30,8 @@ export class Robocock extends Core {
 
   @Column("bigint", { name: "TIER" })
   tier: string;
-
+  @Column("bigint", { name: "CLASS_ID" })
+  classId: string;
   isRoboHEN():boolean{
     return parseInt(this.type) === 1;
   }
