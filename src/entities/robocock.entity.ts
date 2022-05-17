@@ -106,27 +106,37 @@ export class Robocock extends Core {
           HEAD : {
             partId: 0,
             roundSpan: 100,
-            additionalEarning: 10
+            additionalEarning: 10,
+            tierId: 4,
+            tier:"ULTRA"
           },
           BODY : {
             partId: 1,
             roundSpan: 100,
-            additionalEarning: 10
+            additionalEarning: 10,
+            tierId: 4,
+            tier:"ULTRA"
           },
           WINGS:{
             partId: 2,
             roundSpan: 100,
-            additionalEarning: 10
+            additionalEarning: 10,
+            tierId: 4,
+            tier:"ULTRA"
           },
           TAIL :{
             partId: 3,
             roundSpan: 100,
-            additionalEarning: 10
+            additionalEarning: 10,
+            tierId: 4,
+            tier:"ULTRA"
           },
           FEET :{
             partId: 4,
             roundSpan: 100,
-            additionalEarning: 10
+            additionalEarning: 10,
+            tierId: 4,
+            tier:"ULTRA"
           }
         }
     };
