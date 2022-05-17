@@ -101,7 +101,34 @@ export class Robocock extends Core {
 
     this.attributes = {
         genes,
-        summonDate: cockInfo.summonDate
+        summonDate: cockInfo.summonDate,
+        tierParts: {
+          HEAD : {
+            partId: 0,
+            roundSpan: 100,
+            additionalEarning: 10
+          },
+          BODY : {
+            partId: 1,
+            roundSpan: 100,
+            additionalEarning: 10
+          },
+          WINGS:{
+            partId: 2,
+            roundSpan: 100,
+            additionalEarning: 10
+          },
+          TAIL :{
+            partId: 3,
+            roundSpan: 100,
+            additionalEarning: 10
+          },
+          FEET :{
+            partId: 4,
+            roundSpan: 100,
+            additionalEarning: 10
+          }
+        }
     };
     
     if(this.isRoboHEN()){

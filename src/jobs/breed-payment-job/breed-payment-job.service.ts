@@ -56,30 +56,37 @@ export class BreedPaymentJobService extends CovalentEventRetrieverService  {
                 }
             }
             if(eventName.getLogName() === "RobocockBreed") {
+                console.log("id: ",item);
                 const id = item.offSpringId;
+                if(!id){
+                 this.logger.warn("No offSpringId found "+JSON.stringify(item));
+                }
                 let r = await txnEm.findOne(Robocock,{
                     robocockId: id
                 });
-                const cockInfo = await this.blockChainService.getRobocockInfo(id);
-                if(!r){
+                
+                if(!r && id){
+                    const cockInfo = await this.blockChainService.getRobocockInfo(id);
                     r = Robocock.create(cockInfo, item);
                     r.setDataForBreedNft(cockInfo);
                     await txnEm.save(r);
                 } 
 
-                const breed = await txnEm.findOne(BreedRequest,{breedRequestId: item.nonce });
+                const breed = await txnEm.findOne(BreedRequest,{breedRequestId: item.nonce,status:"H" });
                 if(breed){
                     breed.status = "L";
                     breed.txnHash = actualData.tx_hash;
                     await txnEm.save(breed);
 
-                    // set the parent id
-                    r.parentRobocockId = breed.robocockId 
-                    r.parentRobohenId = breed.robohenId;
-
-                    r.headerUrl = breed.headerUrl;
-                    r.imageUrl = breed.imageUrl;
-                    await txnEm.save(r);
+                    if(r){
+                        // set the parent id
+                        r.parentRobocockId = breed.robocockId 
+                        r.parentRobohenId = breed.robohenId;
+    
+                        r.headerUrl = breed.headerUrl;
+                        r.imageUrl = breed.imageUrl;
+                        await txnEm.save(r);
+                    }
                 }
             }
         });

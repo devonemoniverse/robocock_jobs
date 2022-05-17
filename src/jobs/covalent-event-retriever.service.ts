@@ -28,7 +28,7 @@ export abstract class CovalentEventRetrieverService extends AbstractService {
         @InjectEntityManager()
         protected readonly em: EntityManager,
         @Inject("winston")
-        private readonly logger: Logger,
+        protected readonly logger: Logger,
         protected readonly blockChainService: BlockchainService
         ){
         super(schedulerRegistry, logger);
