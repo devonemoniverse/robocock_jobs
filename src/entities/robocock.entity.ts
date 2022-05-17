@@ -39,6 +39,11 @@ export class Robocock extends Core {
   @Column("bigint", { name: "PARENT_ROBOHEN_ID", nullable: true })
   parentRobohenId: string | null;
 
+  
+  @Column("bigint", { name: "MAX_BREED_COUNT" })
+  maxBreedCount: string;
+  
+
   isRoboHEN():boolean{
     return parseInt(this.type) === 1;
   }
@@ -66,9 +71,9 @@ export class Robocock extends Core {
     // Regular Robohen 9 Breeding count
     // Regular Robocock 3 Breeding Count
     if(this.isRoboHEN()){
-      this.breedCount = "9";
+      this.maxBreedCount = "9";
     }else {
-      this.breedCount = "3";
+      this.maxBreedCount = "3";
     }
   }
   setDataForOGNft(cockInfo: any) {
@@ -95,9 +100,9 @@ export class Robocock extends Core {
     };
     
     if(this.isRoboHEN()){
-        this.breedCount = "27";
+        this.maxBreedCount = "27";
     }else {
-        this.breedCount = "9";
+        this.maxBreedCount = "9";
     }
   }
   addPrefix(pad: string, size: number, genes: any) {
