@@ -57,4 +57,10 @@ export class BreedRequest extends Core {
 
   @Column("varchar", { name: "SIGN", length: 300 })
   sign: string;
+
+  @Column("varchar", { name: "IMAGE_URL", nullable: true, length: 300 })
+  imageUrl: string | null;
+
+  @Column("varchar", { name: "HEADER_URL", nullable: true, length: 300 })
+  headerUrl: string | null;
 }

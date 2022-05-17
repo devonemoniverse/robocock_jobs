@@ -76,6 +76,9 @@ export class BreedPaymentJobService extends CovalentEventRetrieverService  {
                     // set the parent id
                     r.parentRobocockId = breed.robocockId 
                     r.parentRobohenId = breed.robohenId;
+
+                    r.headerUrl = breed.headerUrl;
+                    r.imageUrl = breed.imageUrl;
                     await txnEm.save(r);
                 }
             }

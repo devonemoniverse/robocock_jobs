@@ -43,7 +43,12 @@ export class Robocock extends Core {
   @Column("bigint", { name: "MAX_BREED_COUNT" })
   maxBreedCount: string;
   
+  @Column("varchar", { name: "IMAGE_URL", nullable: true, length: 300 })
+  imageUrl: string | null;
 
+  @Column("varchar", { name: "HEADER_URL", nullable: true, length: 300 })
+  headerUrl: string | null;
+  
   isRoboHEN():boolean{
     return parseInt(this.type) === 1;
   }
