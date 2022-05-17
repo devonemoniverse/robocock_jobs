@@ -85,6 +85,7 @@ export class BreedPaymentJobService extends CovalentEventRetrieverService  {
     
                         r.headerUrl = breed.headerUrl;
                         r.imageUrl = breed.imageUrl;
+                        r.attributes.tierParts = breed.attributes.tierParts;
                         await txnEm.save(r);
                     }
                 }

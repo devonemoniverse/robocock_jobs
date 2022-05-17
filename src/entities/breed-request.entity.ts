@@ -63,4 +63,8 @@ export class BreedRequest extends Core {
 
   @Column("varchar", { name: "HEADER_URL", nullable: true, length: 300 })
   headerUrl: string | null;
+
+    
+  @Column("json", { name: "ATTRIBUTES" })
+  attributes;
 }
