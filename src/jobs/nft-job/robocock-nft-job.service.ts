@@ -1,14 +1,11 @@
-import { EntityManager } from 'typeorm';
+import { Injectable } from "@nestjs/common";
+import { EntityManager } from "typeorm";
 
-import { Injectable } from '@nestjs/common';
-
-import { SYSPAR } from '../../common/enum';
-import { QUERIES } from '../../database/queries';
-import { Robocock } from '../../entities/robocock.entity';
-import {
-  CovalentEventRetrieverService,
-} from '../covalent-event-retriever.service';
-import { EventLogsTransfer } from '../events/event-logs-transfer';
+import { SYSPAR } from "../../common/enum";
+import { QUERIES } from "../../database/queries";
+import { Robocock } from "../../entities/robocock.entity";
+import { CovalentEventRetrieverService } from "../covalent-event-retriever.service";
+import { EventLogsTransfer } from "../events/event-logs-transfer";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const axios = require('axios');
@@ -63,59 +60,11 @@ export class RobocockNftJobService extends CovalentEventRetrieverService {
                 });
                 if(!r){
                     const cockInfo = await this.blockChainService.getRobocockInfo(item.tokenId);
-                    r = new Robocock();
-                    r.class = cockInfo.className;
-                    r.type = cockInfo.rtype;
-                    r.robocockId = cockInfo.tokenId;
-                    r.owner = item.to;
-                    r.generation = cockInfo.generation;
-                    r.classId = cockInfo.class;
-                    // if(r.isOG()){
-                    //     r.tier = TIER_ULTRA;
-                    // }
-                    
-                    // OG Robohen 27 breeding count
-                    // OG Robocock 9 Breeding Count
+                    r = Robocock.create(cockInfo, item);
                     if(r.isOG()){
-                        // for the case of OG just concatenate
-                        // allele info
-                        let genes = 
-                        "0"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes+ // head
-                        "1"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes+ // body
-                        "2"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes+ // wings
-                        "3"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes+ // tail
-                        "4"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes; // feet
-
-                        // tier info
-                        genes = genes +
-                        "0"+"0"+"4"+ // head ultra
-                        "1"+"0"+"4"+ // body ultra
-                        "2"+"0"+"4"+ // wings ultra
-                        "3"+"0"+"4"+ // tail ultra
-                        "4"+"0"+"4"; // feet ultra
-
-                        r.attributes = {
-                            genes,
-                            summonDate: cockInfo.summonDate
-                        };
-                        
-                        if(r.isRoboHEN()){
-                            r.breedCount = "27";
-                        }else {
-                            r.breedCount = "9";
-                        }
+                        r.setDataForOGNft(cockInfo);
                     } else {
-                        r.attributes = {
-                            genes: this.addPrefix("0",50,cockInfo.genes),
-                            summonDate: cockInfo.summonDate
-                        };
-                        // Regular Robohen 9 Breeding count
-                        // Regular Robocock 3 Breeding Count
-                        if(r.isRoboHEN()){
-                            r.breedCount = "9";
-                        }else {
-                            r.breedCount = "3";
-                        }
+                        r.setDataForBreedNft(cockInfo);
                     }
                     await txnEm.save(r);
                 }
@@ -126,12 +75,6 @@ export class RobocockNftJobService extends CovalentEventRetrieverService {
             }
         });
     }
-    addPrefix(pad: string, size: number, genes: any) {
-        let padded = "";
-        while(genes.length + padded.length < size){
-            padded+=pad;
-        } 
-        return padded+genes;
-    }
+   
     
 }

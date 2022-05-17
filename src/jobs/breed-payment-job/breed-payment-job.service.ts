@@ -1,16 +1,14 @@
-import { EntityManager } from 'typeorm';
+import { Injectable } from "@nestjs/common";
+import { EntityManager } from "typeorm";
 
-import { Injectable } from '@nestjs/common';
-
-import { SYSPAR } from '../../common/enum';
-import { QUERIES } from '../../database/queries';
-import { BreedRequest } from '../../entities/breed-request.entity';
-import { PaymentRequest } from '../../entities/payment-request.entity';
-import {
-  CovalentEventRetrieverService,
-} from '../covalent-event-retriever.service';
-import { EventLogs } from '../events/event-logs';
-import * as RobocockBreed from './RobocockBreed.json';
+import { SYSPAR } from "../../common/enum";
+import { QUERIES } from "../../database/queries";
+import { BreedRequest } from "../../entities/breed-request.entity";
+import { PaymentRequest } from "../../entities/payment-request.entity";
+import { Robocock } from "../../entities/robocock.entity";
+import { CovalentEventRetrieverService } from "../covalent-event-retriever.service";
+import { EventLogs } from "../events/event-logs";
+import * as RobocockBreed from "./RobocockBreed.json";
 
 /*
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -58,11 +56,27 @@ export class BreedPaymentJobService extends CovalentEventRetrieverService  {
                 }
             }
             if(eventName.getLogName() === "RobocockBreed") {
+                const id = item.offSpringId;
+                let r = await txnEm.findOne(Robocock,{
+                    robocockId: id
+                });
+                const cockInfo = await this.blockChainService.getRobocockInfo(id);
+                if(!r){
+                    r = Robocock.create(cockInfo, item);
+                    r.setDataForBreedNft(cockInfo);
+                    await txnEm.save(r);
+                } 
+
                 const breed = await txnEm.findOne(BreedRequest,{breedRequestId: item.nonce });
                 if(breed){
                     breed.status = "L";
                     breed.txnHash = actualData.tx_hash;
                     await txnEm.save(breed);
+
+                    // set the parent id
+                    r.parentRobocockId = breed.robocockId 
+                    r.parentRobohenId = breed.robohenId;
+                    await txnEm.save(r);
                 }
             }
         });

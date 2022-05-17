@@ -1,12 +1,11 @@
-import {
-  Column,
-  Entity,
-} from 'typeorm';
+import { Column, Entity } from "typeorm";
 
-import { Core } from '../core/database/core.entity';
+import { Core } from "../core/database/core.entity";
 
 @Entity("robocock")
 export class Robocock extends Core {
+  
+  
   @Column("bigint", { primary: true, name: "ROBOCOCK_ID" })
   robocockId: string;
 
@@ -30,8 +29,16 @@ export class Robocock extends Core {
 
   @Column("bigint", { name: "TIER" })
   tier: string;
+  
   @Column("bigint", { name: "CLASS_ID" })
   classId: string;
+
+  @Column("bigint", { name: "PARENT_ROBOCOCK_ID", nullable: true })
+  parentRobocockId: string | null;
+
+  @Column("bigint", { name: "PARENT_ROBOHEN_ID", nullable: true })
+  parentRobohenId: string | null;
+
   isRoboHEN():boolean{
     return parseInt(this.type) === 1;
   }
@@ -40,5 +47,64 @@ export class Robocock extends Core {
   }
   isOG():boolean{
     return parseInt(this.generation) === 0;
+  }
+  static create(cockInfo, item){
+    const r = new Robocock();
+    r.class = cockInfo.className;
+    r.type = cockInfo.rtype;
+    r.robocockId = cockInfo.tokenId;
+    r.owner = item.to;
+    r.generation = cockInfo.generation;
+    r.classId = cockInfo.class;
+    return r;
+  }
+  setDataForBreedNft(cockInfo) {
+    this.attributes = {
+        genes: this.addPrefix("0",50,cockInfo.genes),
+        summonDate: cockInfo.summonDate
+    };
+    // Regular Robohen 9 Breeding count
+    // Regular Robocock 3 Breeding Count
+    if(this.isRoboHEN()){
+      this.breedCount = "9";
+    }else {
+      this.breedCount = "3";
+    }
+  }
+  setDataForOGNft(cockInfo: any) {
+    // for the case of OG just concatenate
+    // allele info
+    let genes = 
+    "0"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes+ // head
+    "1"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes+ // body
+    "2"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes+ // wings
+    "3"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes+ // tail
+    "4"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes; // feet
+
+    // tier info
+    genes = genes +
+    "0"+"0"+"4"+ // head ultra
+    "1"+"0"+"4"+ // body ultra
+    "2"+"0"+"4"+ // wings ultra
+    "3"+"0"+"4"+ // tail ultra
+    "4"+"0"+"4"; // feet ultra
+
+    this.attributes = {
+        genes,
+        summonDate: cockInfo.summonDate
+    };
+    
+    if(this.isRoboHEN()){
+        this.breedCount = "27";
+    }else {
+        this.breedCount = "9";
+    }
+  }
+  addPrefix(pad: string, size: number, genes: any) {
+    let padded = "";
+    while(genes.length + padded.length < size){
+        padded+=pad;
+    } 
+    return padded+genes;
   }
 }
