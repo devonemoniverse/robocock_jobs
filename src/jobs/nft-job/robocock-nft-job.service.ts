@@ -1,9 +1,15 @@
 import { Injectable } from "@nestjs/common";
+import BigNumber from "bignumber.js";
 import { EntityManager } from "typeorm";
 
 import { SYSPAR } from "../../common/enum";
 import { QUERIES } from "../../database/queries";
+import { ClassStat } from "../../entities/class-stat.entity";
+import { Part } from "../../entities/part.entity";
+import { RobocockPartStat } from "../../entities/robocock-part-stat.entity";
+import { RobocockStat } from "../../entities/robocock-stat.entity";
 import { Robocock } from "../../entities/robocock.entity";
+import { SysPar } from "../../entities/sys-par.entity";
 import { CovalentEventRetrieverService } from "../covalent-event-retriever.service";
 import { EventLogsTransfer } from "../events/event-logs-transfer";
 
@@ -67,6 +73,51 @@ export class RobocockNftJobService extends CovalentEventRetrieverService {
                         r.setDataForBreedNft(cockInfo);
                     }
                     await txnEm.save(r);
+
+                    if(r.isOG()){
+
+                        // create robocock part stat
+                        const baseStat = await SysPar.getValue(txnEm, SYSPAR.BASE_STAT);
+                        const classStats = await txnEm.find(ClassStat,{
+                            where: { classId: r.classId },
+                            order: {
+                                statOrder: "ASC"
+                            }
+                        });
+                        const parts = await txnEm.find(Part,{order:{partId:"ASC"}});
+                        for(const part of parts){
+                            for(const classStat of classStats){
+                                const robocockPartStat = new RobocockPartStat();
+                                robocockPartStat.partCode = part.code;
+                                robocockPartStat.partId = part.partId;
+    
+                                robocockPartStat.class = r.class;
+                                robocockPartStat.classId = r.classId;
+    
+                                robocockPartStat.nftId = r.robocockId;
+
+                                robocockPartStat.stat = baseStat;
+                                robocockPartStat.statCap = classStat.statCap;
+                                robocockPartStat.statCode = classStat.statCode;
+                                await txnEm.save(robocockPartStat);
+                            }
+                        }
+
+                        // create robocock main stat
+                        for(const classStat of classStats){
+                            
+                            const robocockStat = new RobocockStat();
+                            robocockStat.class = r.class;
+                            robocockStat.classId = r.classId;
+
+                            robocockStat.robocockId = r.robocockId;
+                            robocockStat.stat = new BigNumber(baseStat).multipliedBy(parts.length).toFixed();
+                            robocockStat.statCap = new BigNumber(classStat.statCap).multipliedBy(parts.length).toFixed();
+                            robocockStat.statCode = classStat.statCode;
+
+                            await txnEm.save(robocockStat);
+                        }
+                    }
                 }
                 if(r.owner.toLowerCase() !== item.to.toLowerCase()){
                     r.owner = item.to;

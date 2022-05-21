@@ -84,12 +84,15 @@ export class Robocock extends Core {
   setDataForOGNft(cockInfo: any) {
     // for the case of OG just concatenate
     // allele info
+    // D,r1,r2
     let genes = 
     "0"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes+ // head
     "1"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes+ // body
     "2"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes+ // wings
     "3"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes+ // tail
     "4"+"0"+cockInfo.genes+"0"+cockInfo.genes+"0"+cockInfo.genes; // feet
+
+    
 
     // tier info
     genes = genes +
