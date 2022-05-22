@@ -8,6 +8,7 @@ import { PaymentRequest } from "../../entities/payment-request.entity";
 import { Robocock } from "../../entities/robocock.entity";
 import { CovalentEventRetrieverService } from "../covalent-event-retriever.service";
 import { EventLogs } from "../events/event-logs";
+import { BreedingHelperService } from "../helper/breeding-helper.service";
 import * as RobocockBreed from "./RobocockBreed.json";
 
 /*
@@ -70,6 +71,8 @@ export class BreedPaymentJobService extends CovalentEventRetrieverService  {
                     r = Robocock.create(cockInfo, item);
                     r.setDataForBreedNft(cockInfo);
                     await txnEm.save(r);
+
+                    await BreedingHelperService.createRobocockStatAndMainStatForNormal(txnEm, r);
                 } 
 
                 const breed = await txnEm.findOne(BreedRequest,{breedRequestId: item.nonce,status:"H" });
