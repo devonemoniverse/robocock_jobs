@@ -76,12 +76,15 @@ export class BreedPaymentJobService extends CovalentEventRetrieverService  {
                 } 
 
                 const breed = await txnEm.findOne(BreedRequest,{breedRequestId: item.nonce,status:"H" });
+                console.log("breed: ",breed);
+                this.logger.info("Breed request found "+JSON.stringify(breed));
                 if(breed){
                     breed.status = "L";
                     breed.txnHash = actualData.tx_hash;
                     await txnEm.save(breed);
 
                     if(r){
+                        console.log("breed.attributes ",breed.attributes);
                         // set the parent id
                         r.parentRobocockId = breed.robocockId 
                         r.parentRobohenId = breed.robohenId;
