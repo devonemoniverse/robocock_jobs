@@ -18,7 +18,7 @@ https://docs.nestjs.com/providers#services
 */
 const TOPIC_EVENT_NAME_MAPPING = {
     ["0x7cf6180e26cfdff6fdb643269e29592637d0245b23bb692f5040376196525003".toLowerCase()]:(data, topics)=>new EventLogs(data, topics,"PayBreedingFee",RobocockBreed),
-    ["0x6e53cc42abadcd760448bd797fb612b195af79d0be48b910f5701e5ae152dc17".toLowerCase()]:(data, topics)=>new EventLogs(data, topics,"RobocockBreed",RobocockBreed),
+    ["0x5bdae265b029420bf58825e8dab1ab28f88f6ae64e7c2ca36931a3c8e0559090".toLowerCase()]:(data, topics)=>new EventLogs(data, topics,"RobocockBreed",RobocockBreed),
 }
 @Injectable()
 export class BreedPaymentJobService extends CovalentEventRetrieverService  {

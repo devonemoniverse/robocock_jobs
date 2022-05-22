@@ -92,6 +92,12 @@
         "internalType": "uint256",
         "name": "robohenId",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "offSpringId",
+        "type": "uint256"
       }
     ],
     "name": "RobocockBreed",
