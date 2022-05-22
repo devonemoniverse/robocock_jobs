@@ -2,6 +2,8 @@ import { Column, Entity } from "typeorm";
 
 import { Core } from "../core/database/core.entity";
 
+const GENES_CLASS_SIZE = 35;
+const GENES_TIER_SIZE = 15;
 @Entity("robocock")
 export class Robocock extends Core {
   
@@ -58,6 +60,16 @@ export class Robocock extends Core {
   isOG():boolean{
     return parseInt(this.generation) === 0;
   }
+  getGenes() {
+    const attr:any =this.attributes;
+    return attr.genes;
+  }
+  getClassGenes(){
+    const genes = this.getGenes();
+    const classGenes = genes.substring(0, GENES_CLASS_SIZE);
+    return classGenes;
+  }
+  
   static create(cockInfo, item){
     const r = new Robocock();
     r.class = cockInfo.className;
