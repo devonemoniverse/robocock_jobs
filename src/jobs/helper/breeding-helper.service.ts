@@ -53,7 +53,7 @@ export class BreedingHelperService {
                 robocockPartStat.stat = baseStat;
                 robocockPartStat.statCap = classStat.statCap;
                 robocockPartStat.statCode = classStat.statCode;
-                if (sumStats[robocockPartStat.statCode]) {
+                if (!sumStats[robocockPartStat.statCode]) {
                     sumStats[robocockPartStat.statCode] = { statCap: 0, stat: 0 };
                 }
                 sumStats[robocockPartStat.statCode].statCap += parseFloat(robocockPartStat.statCap);
