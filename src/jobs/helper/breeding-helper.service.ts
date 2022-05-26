@@ -84,6 +84,7 @@ export class BreedingHelperService {
         }
     
         
+        let foundStaOrderZero = false;
         // create robocock main stat
         for (const key of Object.keys(sumStats)) {
             const robocockStat = new RobocockStat();
@@ -94,6 +95,23 @@ export class BreedingHelperService {
             robocockStat.stat = sumStats[key].stat;
             robocockStat.statCap = sumStats[key].statCap;
             robocockStat.statCode = key;
+
+            const classStat = await txnEm.findOne(ClassStat, {
+                where: { classId: robocockStat.classId, statCode: robocockStat.statCode },
+                order: {
+                    statOrder: "ASC"
+                }
+            });
+
+            if(new BigNumber(robocockStat.statCap).gt(100) && new BigNumber(classStat.statOrder).eq(0)){
+                robocockStat.statCap = new BigNumber(robocockStat.statCap).minus(1).toString();
+                foundStaOrderZero = true;
+            }
+            
+            if(foundStaOrderZero && new BigNumber(classStat.statOrder).eq(3)){
+                robocockStat.statCap = new BigNumber(robocockStat.statCap).plus(1).toString();
+            }
+
 
             await txnEm.save(robocockStat);
         }
@@ -133,7 +151,7 @@ export class BreedingHelperService {
         r.attributes.tierParts = tierParts;
         await txnEm.save(r);
     
-
+        let foundStaOrderZero = false;
         // create robocock main stat
         for (const classStat of classStats) {
 
@@ -145,6 +163,17 @@ export class BreedingHelperService {
             robocockStat.stat = new BigNumber(baseStat).multipliedBy(parts.length).toFixed();
             robocockStat.statCap = new BigNumber(classStat.statCap).multipliedBy(parts.length).toFixed();
             robocockStat.statCode = classStat.statCode;
+
+             
+
+            if(new BigNumber(robocockStat.statCap).gt(100) && new BigNumber(classStat.statOrder).eq(0)){
+                robocockStat.statCap = new BigNumber(robocockStat.statCap).minus(1).toString();
+                foundStaOrderZero = true;
+            }
+            
+            if(foundStaOrderZero && new BigNumber(classStat.statOrder).eq(3)){
+                robocockStat.statCap = new BigNumber(robocockStat.statCap).plus(1).toString();
+            }
 
             await txnEm.save(robocockStat);
         }
