@@ -35,7 +35,7 @@ export class CockFactoryNFTJobService extends CovalentEventRetrieverService {
     }
    
     getJobName(): string {
-        return "RobocockNftJobService";
+        return "CockFactoryNFTJobService";
     }
     
     getJobTimeout(): number {
