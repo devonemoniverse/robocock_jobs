@@ -25,12 +25,16 @@ export class BreedingHelperService {
         const offSpringGenes = r.getClassGenes();
 
         const sumStats = {};
+        const tierParts = r.attributes.tierParts;
         // for each part there are possibilities different dominant class
         for (const part of parts) {
-
             const partId = parseInt(part.partId);
             const offSprintClasses = offSpringGenes.substring(partId * 7, 7 * (partId + 1)); // get the string part
             const offSpringPart = new RobocockPart(offSprintClasses);
+            
+            // added updating tier class 
+            tierParts[part.code].class = offSpringPart.dominantClass;
+            tierParts[part.code].classId = offSpringPart.dominant;
 
             // get the dominant class and use this to get the stats
             const classStats = await txnEm.find(ClassStat, {
@@ -61,7 +65,12 @@ export class BreedingHelperService {
                 await txnEm.save(robocockPartStat);
             }
         }
+        
+        // save the new updated tierPars;
+        r.attributes.tierParts = tierParts;
+        await txnEm.save(r);
 
+        
         // create robocock main stat
         for (const key of Object.keys(sumStats)) {
             const robocockStat = new RobocockStat();
