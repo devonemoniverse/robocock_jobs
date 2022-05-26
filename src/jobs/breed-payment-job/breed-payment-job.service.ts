@@ -42,7 +42,7 @@ export class BreedPaymentJobService extends CovalentEventRetrieverService  {
         return "BreedPaymentJobService";
     }
     getJobTimeout(): number {
-        return 1000;
+        return 200;
     }
     
     async process(item: any, eventName: any,actualData:any): Promise<void> {

@@ -39,7 +39,7 @@ export class CockFactoryNFTJobService extends CovalentEventRetrieverService {
     }
     
     getJobTimeout(): number {
-        return 1000;
+        return 200;
     }
      
     hasTokenId(item: any) {
