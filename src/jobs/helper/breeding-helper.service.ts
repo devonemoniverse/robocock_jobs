@@ -17,16 +17,13 @@ https://docs.nestjs.com/providers#services
 */
 
 @Injectable()
-export class BreedingHelperService { 
-    public static async createRobocockStatAndMainStatForNormal(txnEm: EntityManager, r: Robocock): Promise<any> {
-        const baseStat = await SysPar.getValue(txnEm, SYSPAR.BASE_STAT);
+export class BreedingHelperService {
+    static async  updateTierPartsClass(txnEm: EntityManager, r: Robocock) {
         const parts = await txnEm.find(Part, { order: { partId: "ASC" } });
-
-        const offSpringGenes = r.getClassGenes();
-
-        const sumStats = {};
         const tierParts = r.attributes.tierParts;
-        // for each part there are possibilities different dominant class
+        
+        const offSpringGenes = r.getClassGenes();
+        
         for (const part of parts) {
             const partId = parseInt(part.partId);
             const offSprintClasses = offSpringGenes.substring(partId * 7, 7 * (partId + 1)); // get the string part
@@ -35,6 +32,26 @@ export class BreedingHelperService {
             // added updating tier class 
             tierParts[part.code].class = offSpringPart.dominantClass;
             tierParts[part.code].classId = offSpringPart.dominant;
+        }
+
+        // save the new updated tierPars;
+        r.attributes.tierParts = tierParts;
+    } 
+    public static async createRobocockStatAndMainStatForNormal(txnEm: EntityManager, r: Robocock): Promise<any> {
+        const baseStat = await SysPar.getValue(txnEm, SYSPAR.BASE_STAT);
+        const parts = await txnEm.find(Part, { order: { partId: "ASC" } });
+
+        const offSpringGenes = r.getClassGenes();
+
+        const sumStats = {};
+         
+        // for each part there are possibilities different dominant class
+        for (const part of parts) {
+            const partId = parseInt(part.partId);
+            const offSprintClasses = offSpringGenes.substring(partId * 7, 7 * (partId + 1)); // get the string part
+            const offSpringPart = new RobocockPart(offSprintClasses);
+            
+ 
 
             // get the dominant class and use this to get the stats
             const classStats = await txnEm.find(ClassStat, {
@@ -65,11 +82,7 @@ export class BreedingHelperService {
                 await txnEm.save(robocockPartStat);
             }
         }
-        
-        // save the new updated tierPars;
-        r.attributes.tierParts = tierParts;
-        await txnEm.save(r);
-
+    
         
         // create robocock main stat
         for (const key of Object.keys(sumStats)) {

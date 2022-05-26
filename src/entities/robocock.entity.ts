@@ -169,4 +169,6 @@ export class Robocock extends Core {
     } 
     return padded+genes;
   }
+  
+
 }

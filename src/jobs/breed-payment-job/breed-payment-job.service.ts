@@ -57,7 +57,7 @@ export class BreedPaymentJobService extends CovalentEventRetrieverService  {
                 }
             }
             if(eventName.getLogName() === "RobocockBreed") {
-                console.log("id: ",item);
+               
                 const id = item.offSpringId;
                 if(!id){
                  this.logger.warn("No offSpringId found "+JSON.stringify(item));
@@ -77,14 +77,14 @@ export class BreedPaymentJobService extends CovalentEventRetrieverService  {
 
                 const breed = await txnEm.findOne(BreedRequest,{breedRequestId: item.nonce,status:"H" });
                 if(breed){
-                    console.log("breed: ",breed);
+                   
                     this.logger.info("Breed request found "+JSON.stringify(breed));
                     breed.status = "L";
                     breed.txnHash = actualData.tx_hash;
                     await txnEm.save(breed);
 
                     if(r){
-                        console.log("breed.attributes ",breed.attributes);
+                       
                         // set the parent id
                         r.parentRobocockId = breed.robocockId 
                         r.parentRobohenId = breed.robohenId;
@@ -92,6 +92,7 @@ export class BreedPaymentJobService extends CovalentEventRetrieverService  {
                         r.headerUrl = breed.headerUrl;
                         r.imageUrl = breed.imageUrl;
                         r.attributes.tierParts = breed.attributes.tierParts;
+                        await BreedingHelperService.updateTierPartsClass(txnEm, r);
                         await txnEm.save(r);
                     }
                 }

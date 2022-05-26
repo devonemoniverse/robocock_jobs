@@ -16,8 +16,7 @@ export class EventLogsTransfer extends EventLogs {
             tokenId: new BigNumber(new BigNumber( this.topics[3],16).toString()).toString(),
             time: null  
         }
-        //console.log("data ",this.topics);
-        //console.log("res ",res);
+        
         return res
     }
     removeLeftZeroes(data){
