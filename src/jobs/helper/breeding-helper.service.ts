@@ -94,6 +94,7 @@ export class BreedingHelperService {
                 statOrder: "ASC"
             }
         });
+        const tierParts = r.attributes.tierParts;
         const parts = await txnEm.find(Part, { order: { partId: "ASC" } });
         for (const part of parts) {
             for (const classStat of classStats) {
@@ -111,7 +112,14 @@ export class BreedingHelperService {
                 robocockPartStat.statCode = classStat.statCode;
                 await txnEm.save(robocockPartStat);
             }
+            tierParts[part.code].class = r.class;
+            tierParts[part.code].classId = r.classId;
         }
+
+        // save the new updated tierPars;
+        r.attributes.tierParts = tierParts;
+        await txnEm.save(r);
+    
 
         // create robocock main stat
         for (const classStat of classStats) {
