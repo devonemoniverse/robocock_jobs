@@ -34,7 +34,6 @@ export class BreedingHelperService {
             tierParts[part.code].classId = offSpringPart.dominant;
         }
 
-        // save the new updated tierPars;
         r.attributes.tierParts = tierParts;
     } 
     public static async createRobocockStatAndMainStatForNormal(txnEm: EntityManager, r: Robocock): Promise<any> {
@@ -147,7 +146,7 @@ export class BreedingHelperService {
             tierParts[part.code].classId = r.classId;
         }
 
-        // save the new updated tierPars;
+        // save the new updated tierParts;
         r.attributes.tierParts = tierParts;
         await txnEm.save(r);
     
