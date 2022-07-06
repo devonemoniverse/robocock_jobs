@@ -4,6 +4,7 @@ import { EntityManager } from "typeorm";
 import { SYSPAR } from "../../common/enum";
 import { QUERIES } from "../../database/queries";
 import { Robocock } from "../../entities/robocock.entity";
+import { WhitelistedContract } from "../../entities/whitelisted-contract.entity";
 import { CovalentEventRetrieverService } from "../covalent-event-retriever.service";
 import { EventLogsTransfer } from "../events/event-logs-transfer";
 import { BreedingHelperService } from "../helper/breeding-helper.service";
@@ -76,9 +77,15 @@ export class RobocockNftJobService extends CovalentEventRetrieverService {
                         await BreedingHelperService.createRobocockStatAndMainStatForNormal(txnEm, r);
                     }
                 }
+                
                 if(r.owner.toLowerCase() !== item.to.toLowerCase()){
-                    r.owner = item.to;
-                    await txnEm.save(r);
+
+                    const isWhitelistedReceiver = await txnEm.findOne(WhitelistedContract,{contractAddress: item.to.toLowerCase()});
+                    if(!isWhitelistedReceiver){
+                        r.owner = item.to;
+                        await txnEm.save(r);
+                    }
+                    
                 }
             }
         });
