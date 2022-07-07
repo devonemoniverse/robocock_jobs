@@ -35,7 +35,7 @@ export abstract class CovalentEventRetrieverService extends AbstractService {
         logger.info(this.getJobName()+" has been initialized");
     }
 
-    abstract process(item: any, eventName, actualData): Promise<void>
+    abstract process(item: any, eventName, actualData, web3?, actualResult?): Promise<void>
     abstract getContractAddressKey(): SYSPAR;
     abstract getContractPageNumberKey(): SYSPAR;
     abstract getContractPageSizeKey(): SYSPAR;
@@ -85,9 +85,9 @@ export abstract class CovalentEventRetrieverService extends AbstractService {
                     continue;
                 }
                 const resultVal: any = eventName.getParseLog(web3);
-                
+                console.log("resultVal: ",resultVal);
                 const item = resultVal.item || resultVal || {};
-                await this.process(item, eventName, data);
+                await this.process(item, eventName, data, web3, resultVal);
             }
             
             if(result.length > 0){
