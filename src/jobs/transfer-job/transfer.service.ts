@@ -28,22 +28,22 @@ export class TransferService extends CovalentEventRetrieverService  {
 
             await txnEm.query(QUERIES.SET_SESSION_USER,[-1]);
             if(eventName.getLogName() === "TransferItemCreated"){
-                // const pay = await txnEm.findOne(TransferRequest,{transferRequestId: item.itemId});
-                // if(pay){
-                //     pay.status = "P"; // index
-                //     await txnEm.save(pay);
-                // }
+                const pay = await txnEm.findOne(TransferRequest,{transferRequestId: item.itemId});
+                if(pay){
+                    pay.status = "S"; // for sale
+                    await txnEm.save(pay);
+                }
             }
             if(eventName.getLogName() === "TransferItemCancelled"){
                 console.log("itemcancelled : ",item.itemId )
-                const pay = await txnEm.findOne(TransferRequest,{transferRequestId: item.itemId,status:"P"});
+                const pay = await txnEm.findOne(TransferRequest,{transferRequestId: item.itemId,status:"S"});
                 if(pay){
                     pay.status = "X";
                     await txnEm.save(pay);
                 }
             }
             if(eventName.getLogName() === "TransferItemCompleted"){
-                const pay = await txnEm.findOne(TransferRequest,{transferRequestId: item.itemId,status: "P"});
+                const pay = await txnEm.findOne(TransferRequest,{transferRequestId: item.itemId,status: "S"});
                 if(pay){
                     pay.status = "L";
                     pay.tokenPrice = Web3Utils.fromWei(web3, actualResult.gkenPrice.toString()); 
