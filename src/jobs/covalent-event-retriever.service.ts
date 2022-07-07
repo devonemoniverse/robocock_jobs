@@ -85,7 +85,7 @@ export abstract class CovalentEventRetrieverService extends AbstractService {
                     continue;
                 }
                 const resultVal: any = eventName.getParseLog(web3);
-                console.log("resultVal: ",resultVal);
+                
                 const item = resultVal.item || resultVal || {};
                 await this.process(item, eventName, data, web3, resultVal);
             }
