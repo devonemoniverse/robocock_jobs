@@ -90,6 +90,10 @@ export class DepositWithdrawJobService extends CovalentEventRetrieverService  {
                     if(!withdraw){
                         throw Error("withdraw nonce not existing in the database");
                     }
+
+                    if(withdraw.txnHash){
+                        return;
+                    }
                     withdraw.walletSign = item.walletSig;
                     withdraw.timestamp = item.depositTime;
                     withdraw.txnHash = actualData.tx_hash;
