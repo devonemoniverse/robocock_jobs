@@ -31,7 +31,7 @@ export class TrainRecordService extends JobService {
         await this.em.transaction(async (txnEm:EntityManager)=>{
             await txnEm.query(QUERIES.SET_SESSION_USER,[-1]);
             const res = await txnEm.query("call update_robocock_stats()");
-            console.log("result of update_robocock_stats : ",res);
+            // console.log("result of update_robocock_stats : ",res);
 
         });
     }
