@@ -30,7 +30,8 @@ export class CancelExpiredPveService extends JobService {
     async runJob(): Promise<void> {
         await this.em.transaction(async (txnEm:EntityManager)=>{
             await txnEm.query(QUERIES.SET_SESSION_USER,[-1]);
-            await txnEm.query("call `cancel_expired_pve`()");
+            const res = await txnEm.query("call `cancel_expired_pve`()");
+            console.log("result of cancel_expired_pve : ",res);
         });
     }
      

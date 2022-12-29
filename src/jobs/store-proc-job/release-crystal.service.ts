@@ -30,7 +30,8 @@ export class ReleaseCrystalService extends JobService {
     async runJob(): Promise<void> {
         await this.em.transaction(async (txnEm:EntityManager)=>{
             await txnEm.query(QUERIES.SET_SESSION_USER,[-1]);
-            await txnEm.query("call release_crystal()");
+            const res = await txnEm.query("call release_crystal()");
+            console.log("result of release_crystal : ",res);
         });
     }
      
